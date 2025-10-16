@@ -1,6 +1,6 @@
 # Prompt Manager 📝
 
-A modern web application for managing and organizing your AI prompts. Created during [Rocketseat's NLW (Next Level Week)](https://www.rocketseat.com.br/) event.
+A modern web application for managing and organizing your AI prompts. Created during Rocketseat's NLW event.
 
 ![Prompt Manager](assets/logo.svg)
 
@@ -85,7 +85,7 @@ All data is stored locally in your browser using `localStorage`. Your prompts ar
 
 ## 📝 About This Project
 
-This application was developed as part of [Rocketseat's](https://www.rocketseat.com.br/) **NLW (Next Level Week)** event - an intensive week-long coding experience focused on building real-world projects and leveling up development skills.
+This application was developed as part of Rocketseat **NLW (Next Level Week)** event - an intensive week-long coding experience focused on building real-world projects and leveling up development skills.
 
 ## 🤝 Contributing
 
