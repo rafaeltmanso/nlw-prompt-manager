@@ -104,4 +104,4 @@ Contributions are welcome! Feel free to:
 
 ---
 
-Made with ❤️ during [Rocketseat NLW](https://www.rocketseat.com.br/) 🚀
+Made with ❤️ during [Rocketseat NLW] 🚀
