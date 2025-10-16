@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="assets/favicon.svg"
+    />
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+
+    <title>Prompts</title>
+  </head>
+  <body>
+    <div class="app">
+      <button
+        class="icon-button open-toggle"
+        id="btn-open"
+      >
+        <img
+          src="assets/open.svg"
+          alt="Open Menu"
+          class="icon"
+        />
+      </button>
+
+      <aside class="sidebar">
+        <header class="sidebar-header">
+          <img
+            src="assets/logo.svg"
+            alt="Logo"
+            class="logo"
+          />
+
+          <button
+            class="icon-button"
+            id="btn-collapse"
+          >
+            <img
+              src="assets/collapse.svg"
+              alt="Close Menu"
+              class="icon"
+            />
+          </button>
+        </header>
+
+        <div class="sidebar-content">
+          <div class="search-container">
+            <img
+              src="assets/search.svg"
+              alt="Search"
+              class="icon search-icon"
+            />
+
+            <input
+              type="text"
+              class="search-input"
+              id="search-input"
+              placeholder="Search in title and content"
+            />
+
+            <button
+              class="btn-primary btn btn-full"
+              id="btn-new"
+            >
+              New prompt
+            </button>
+          </div>
+
+          <!-- Contador e filtros -->
+          <div class="sidebar-stats">
+            <div class="stats-info">
+              <select
+                id="sort-select"
+                class="sort-select"
+                title="Sort"
+              >
+                <option value="manual">Manual order</option>
+                <option value="recent">Most recent</option>
+                <option value="oldest">Oldest</option>
+                <option value="a-z">A-Z</option>
+                <option value="z-a">Z-A</option>
+              </select>
+              <span
+                id="prompts-count"
+                class="stats-count"
+                >0 prompts</span
+              >
+            </div>
+            <div class="stats-actions">
+              <button
+                class="btn-filter"
+                id="btn-view-mode"
+                title="Toggle view"
+              >
+                ⊞
+              </button>
+              <button
+                class="btn-filter"
+                id="btn-favorites"
+                title="Show favorites"
+              >
+                ⭐
+              </button>
+              <button
+                class="btn-filter"
+                id="btn-import"
+                title="Import prompts"
+              >
+                ⬆️
+              </button>
+              <button
+                class="btn-filter"
+                id="btn-export"
+                title="Export prompts"
+              >
+                ⬇️
+              </button>
+            </div>
+          </div>
+
+          <ul
+            class="prompt-list"
+            id="prompt-list"
+          ></ul>
+        </div>
+      </aside>
+
+      <!-- Input hidden para importar arquivos -->
+      <input
+        type="file"
+        id="file-input"
+        accept=".json"
+        style="display: none"
+      />
+
+      <main class="main">
+        <header class="main-header">
+          <div class="header-info">
+            <span
+              id="char-count"
+              class="char-counter"
+              >0 characters</span
+            >
+            <span
+              id="unsaved-indicator"
+              class="unsaved-indicator"
+              style="display: none"
+            >
+              <span class="unsaved-dot">•</span> Unsaved
+            </span>
+          </div>
+
+          <div class="header-actions">
+            <button
+              id="btn-shortcuts"
+              class="btn-outline btn btn-icon"
+              title="Keyboard shortcuts"
+            >
+              ⌨️
+            </button>
+
+            <button
+              id="btn-copy"
+              class="btn-outline btn"
+            >
+              <img
+                src="assets/copy.svg"
+                alt="Copy"
+                class="icon"
+              />
+              <span>Copy</span>
+            </button>
+
+            <button
+              id="btn-save"
+              class="btn-primary btn w-150"
+            >
+              Save
+            </button>
+          </div>
+        </header>
+
+        <div
+          data-placeholder="Prompt title"
+          class="editable-wrapper"
+          id="title-wrapper"
+        >
+          <h1
+            id="prompt-title"
+            class="prompt-title"
+            contenteditable="true"
+          ></h1>
+        </div>
+
+        <!-- Barra de formatação e Tags -->
+        <div class="toolbar-tags-wrapper">
+          <div class="formatting-toolbar">
+            <button
+              class="format-btn"
+              data-format="bold"
+              title="Bold (Ctrl+B)"
+            >
+              <strong>B</strong>
+            </button>
+            <button
+              class="format-btn"
+              data-format="italic"
+              title="Italic (Ctrl+I)"
+            >
+              <em>I</em>
+            </button>
+            <button
+              class="format-btn"
+              data-format="underline"
+              title="Underline (Ctrl+U)"
+            >
+              <u>U</u>
+            </button>
+            <span class="toolbar-separator"></span>
+            <button
+              class="format-btn"
+              data-format="insertUnorderedList"
+              title="Bullet list"
+            >
+              ≡
+            </button>
+            <button
+              class="format-btn"
+              data-format="insertOrderedList"
+              title="Numbered list"
+            >
+              ≣
+            </button>
+            <span class="toolbar-separator"></span>
+            <button
+              class="format-btn"
+              data-format="code"
+              title="Inline code"
+            >
+              &lt;/&gt;
+            </button>
+            <button
+              class="format-btn"
+              data-format="removeFormat"
+              title="Remove formatting"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- Tags/Categorias -->
+          <div class="tags-container">
+            <div
+              class="tags-list"
+              id="tags-list"
+            ></div>
+            <div class="tags-input-wrapper">
+              <input
+                type="text"
+                id="tag-input"
+                class="tag-input"
+                placeholder="Add tag..."
+                maxlength="20"
+              />
+              <button
+                class="btn-add-tag"
+                id="btn-add-tag"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          data-placeholder="Prompt content..."
+          class="editable-wrapper"
+          id="content-wrapper"
+        >
+          <div
+            id="prompt-content"
+            class="prompt-content"
+            contenteditable="true"
+          ></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Container para notificações toast -->
+    <div
+      id="toast-container"
+      class="toast-container"
+    ></div>
+
+    <!-- Modal de confirmação -->
+    <div
+      id="modal-overlay"
+      class="modal-overlay"
+      style="display: none"
+    >
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-icon">⚠️</span>
+          <h2
+            class="modal-title"
+            id="modal-title"
+          >
+            Confirm action
+          </h2>
+        </div>
+        <p
+          class="modal-message"
+          id="modal-message"
+        ></p>
+        <div class="modal-actions">
+          <button
+            class="modal-btn modal-btn-cancel"
+            id="modal-cancel"
+          >
+            Cancel
+          </button>
+          <button
+            class="modal-btn modal-btn-confirm"
+            id="modal-confirm"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de atalhos de teclado -->
+    <div
+      id="shortcuts-modal"
+      class="modal-overlay"
+      style="display: none"
+    >
+      <div class="modal modal-shortcuts">
+        <div class="modal-header">
+          <span class="modal-icon">⌨️</span>
+          <h2 class="modal-title">Keyboard Shortcuts</h2>
+        </div>
+        <div class="shortcuts-list">
+          <div class="shortcut-item">
+            <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>K</kbd></span>
+            <span class="shortcut-description">Focus search</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>N</kbd></span>
+            <span class="shortcut-description">New prompt</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>S</kbd></span>
+            <span class="shortcut-description">Save prompt</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>D</kbd></span>
+            <span class="shortcut-description">Duplicate prompt</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>F</kbd></span>
+            <span class="shortcut-description">Toggle favorite</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-keys"><kbd>F2</kbd></span>
+            <span class="shortcut-description">Edit title</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-keys"><kbd>Delete</kbd></span>
+            <span class="shortcut-description">Remove prompt</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-keys"
+              ><kbd>?</kbd> or <kbd>Ctrl</kbd> + <kbd>/</kbd></span
+            >
+            <span class="shortcut-description">Show shortcuts</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-keys"><kbd>Esc</kbd></span>
+            <span class="shortcut-description">Close sidebar / Unfocus</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-keys"><kbd>Enter</kbd></span>
+            <span class="shortcut-description">Confirm modal</span>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button
+            class="modal-btn modal-btn-confirm"
+            id="shortcuts-close"
+          >
+            Got it!
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
