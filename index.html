@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+
+    <title>Prompts</title>
+  </head>
+  <body>
+    <div class="app">
+      <button class="icon-button open-toggle" id="btn-open">
+        <img src="assets/open.svg" alt="Abrir Menu" class="icon" />
+      </button>
+
+      <aside class="sidebar">
+        <header class="sidebar-header">
+          <img src="assets/logo.svg" alt="Logo" class="logo" />
+
+          <button class="icon-button" id="btn-collapse">
+            <img src="assets/collapse.svg" alt="Fechar Menu" class="icon" />
+          </button>
+        </header>
+
+        <div class="sidebar-content">
+          <div class="search-container">
+            <img
+              src="assets/search.svg"
+              alt="Buscar"
+              class="icon search-icon"
+            />
+
+            <input
+              type="text"
+              class="search-input"
+              id="search-input"
+              placeholder="Buscar em título e conteúdo"
+            />
+
+            <button class="btn-primary btn btn-full" id="btn-new">
+              Novo prompt
+            </button>
+          </div>
+
+          <!-- Contador e filtros -->
+          <div class="sidebar-stats">
+            <div class="stats-info">
+              <span id="prompts-count" class="stats-count">0 prompts</span>
+              <select id="sort-select" class="sort-select" title="Ordenar">
+                <option value="manual">Ordem manual</option>
+                <option value="recent">Mais recentes</option>
+                <option value="oldest">Mais antigos</option>
+                <option value="a-z">A-Z</option>
+                <option value="z-a">Z-A</option>
+              </select>
+            </div>
+            <div class="stats-actions">
+              <button
+                class="btn-filter"
+                id="btn-view-mode"
+                title="Alternar visualização"
+              >
+                ⊞
+              </button>
+              <button
+                class="btn-filter"
+                id="btn-favorites"
+                title="Mostrar favoritos"
+              >
+                ⭐
+              </button>
+              <button
+                class="btn-filter"
+                id="btn-export"
+                title="Exportar prompts"
+              >
+                ⬇️
+              </button>
+            </div>
+          </div>
+
+          <ul class="prompt-list" id="prompt-list"></ul>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="main-header">
+          <div class="header-info">
+            <span id="char-count" class="char-counter">0 caracteres</span>
+            <span
+              id="unsaved-indicator"
+              class="unsaved-indicator"
+              style="display: none"
+            >
+              <span class="unsaved-dot">•</span> Não salvo
+            </span>
+          </div>
+
+          <div class="header-actions">
+            <button id="btn-copy" class="btn-outline btn">
+              <img src="assets/copy.svg" alt="Copiar" class="icon" />
+              <span>Copiar</span>
+            </button>
+
+            <button id="btn-save" class="btn-primary btn w-150">Salvar</button>
+          </div>
+        </header>
+
+        <div
+          data-placeholder="Título do prompt"
+          class="editable-wrapper"
+          id="title-wrapper"
+        >
+          <h1
+            id="prompt-title"
+            class="prompt-title"
+            contenteditable="true"
+          ></h1>
+        </div>
+
+        <!-- Barra de formatação e Tags -->
+        <div class="toolbar-tags-wrapper">
+          <div class="formatting-toolbar">
+            <button
+              class="format-btn"
+              data-format="bold"
+              title="Negrito (Ctrl+B)"
+            >
+              <strong>B</strong>
+            </button>
+            <button
+              class="format-btn"
+              data-format="italic"
+              title="Itálico (Ctrl+I)"
+            >
+              <em>I</em>
+            </button>
+            <button
+              class="format-btn"
+              data-format="underline"
+              title="Sublinhado (Ctrl+U)"
+            >
+              <u>U</u>
+            </button>
+            <span class="toolbar-separator"></span>
+            <button
+              class="format-btn"
+              data-format="insertUnorderedList"
+              title="Lista"
+            >
+              ≡
+            </button>
+            <button
+              class="format-btn"
+              data-format="insertOrderedList"
+              title="Lista numerada"
+            >
+              ≣
+            </button>
+            <span class="toolbar-separator"></span>
+            <button class="format-btn" data-format="code" title="Código inline">
+              &lt;/&gt;
+            </button>
+            <button
+              class="format-btn"
+              data-format="removeFormat"
+              title="Remover formatação"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- Tags/Categorias -->
+          <div class="tags-container">
+            <div class="tags-list" id="tags-list"></div>
+            <div class="tags-input-wrapper">
+              <input
+                type="text"
+                id="tag-input"
+                class="tag-input"
+                placeholder="Adicionar tag..."
+                maxlength="20"
+              />
+              <button class="btn-add-tag" id="btn-add-tag">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          data-placeholder="Conteúdo do prompt ..."
+          class="editable-wrapper"
+          id="content-wrapper"
+        >
+          <div
+            id="prompt-content"
+            class="prompt-content"
+            contenteditable="true"
+          ></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Container para notificações toast -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Modal de confirmação -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none">
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-icon">⚠️</span>
+          <h2 class="modal-title" id="modal-title">Confirmar ação</h2>
+        </div>
+        <p class="modal-message" id="modal-message"></p>
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn-cancel" id="modal-cancel">
+            Cancelar
+          </button>
+          <button class="modal-btn modal-btn-confirm" id="modal-confirm">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
